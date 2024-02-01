@@ -1,6 +1,6 @@
 import json
 import uuid
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .models import ShortUrl
 
 
@@ -13,9 +13,7 @@ def get_original_url(request, short_url):
     if request.method == "GET":
         short_url_obj = ShortUrl.objects.filter(short_url=short_url).first()
         if short_url_obj is not None:
-            return JsonResponse(
-                {'original_url': short_url_obj.original_url, 'created_at': short_url_obj.created_at}
-            )
+            return HttpResponseRedirect(short_url_obj.original_url)
         else:
             return HttpResponse(status=404)
     else:
